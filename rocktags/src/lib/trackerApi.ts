@@ -6,6 +6,7 @@
  * - Request caching (5-second TTL)
  * - Retry logic with exponential backoff
  * - Timeout protection
+ * - Bounds validation (checks if location is within UTA campus)
  */
 
 // Use the local API proxy to avoid CORS issues
@@ -13,6 +14,30 @@ const TRACKER_API_URL = "/api/tracker";
 
 const TRACKER_TIMEOUT = 
   parseInt(process.env.NEXT_PUBLIC_TRACKER_TIMEOUT || "10000");
+
+// UTA Campus Bounds (approximate geofence around UTA Arlington campus)
+// These values are based on the coordinates in campus-data.json
+const UTA_BOUNDS = {
+  minLat: 32.7270,  // South boundary
+  maxLat: 32.7400,  // North boundary
+  minLng: -97.1250, // West boundary
+  maxLng: -97.1050, // East boundary
+};
+
+/**
+ * Validate if a location is within UTA campus bounds
+ * @param lat - Latitude
+ * @param lng - Longitude
+ * @returns true if location is within bounds, false otherwise
+ */
+function isWithinUTABounds(lat: number, lng: number): boolean {
+  return (
+    lat >= UTA_BOUNDS.minLat &&
+    lat <= UTA_BOUNDS.maxLat &&
+    lng >= UTA_BOUNDS.minLng &&
+    lng <= UTA_BOUNDS.maxLng
+  );
+}
 
 // Cache configuration
 const CACHE_DURATION = 5000; // 5 seconds
@@ -196,11 +221,34 @@ async function fetchTrackerLocationsOnce(
     const data = await response.json();
     console.log("✅ Tracker API response:", data);
     
+    // Validate each location is within UTA bounds
+    const validatedData: TrackerResponse = {};
+    let hasOutOfBoundsLocations = false;
+    
+    Object.entries(data).forEach(([catName, location]) => {
+      const trackerLoc = location as TrackerLocation;
+      
+      if (isWithinUTABounds(trackerLoc.latitude, trackerLoc.longitude)) {
+        validatedData[catName] = trackerLoc;
+      } else {
+        hasOutOfBoundsLocations = true;
+      }
+    });
+    
+    // Log consolidated message - only once per fetch cycle
     if (Object.keys(data).length === 0) {
-      console.warn("⚠️ Backend returned empty response - using static cat positions");
+      // Backend returned no data
+      console.warn("⚠️ Backend is DOWN - no tracker data received. Using static cat positions");
+    } else if (Object.keys(validatedData).length === 0 && hasOutOfBoundsLocations) {
+      // All locations are out of bounds
+      console.warn("⚠️ All tracker locations are OUT OF BOUNDS - using static cat positions");
+    } else if (Object.keys(validatedData).length > 0) {
+      // At least some valid locations
+      const validCats = Object.keys(validatedData).join(", ");
+      console.log(`✅ Valid tracker locations: ${validCats}`);
     }
     
-    return data;
+    return validatedData;
   } finally {
     clearTimeout(timeoutId);
   }
