@@ -56,12 +56,3 @@ If you see errors about missing credentials:
 2. Restart your development server after creating `.env.local`
 3. Check that all three environment variables are set correctly
 4. Verify the private key includes `\n` characters (not actual line breaks)
-
-## What Changed?
-
-Previously, we used a JSON file (`rocktags-testing-firebase-adminsdk-fbsvc-e48f186959.json`) that had to be renamed by each team member. Now we use environment variables which is:
-
-- ✅ More secure
-- ✅ Easier to manage for teams
-- ✅ Industry best practice
-- ✅ No file renaming needed
