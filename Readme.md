@@ -55,18 +55,19 @@ Meowvrick is an interactive platform that features a campus map with real-time c
    cd rocktags
    ```
 
-2. Copy the sample env file:
+2. Create a `.env.local` file in the `rocktags` directory with your Firebase Admin SDK credentials:
 
-   ```bash
-   cp .env.example .env.local
-   ```
-
-3. Add your Firebase credentials to `.env.local`:
    ```env
-   FIREBASE_ADMIN_PROJECT_ID="your-project-id"
-   FIREBASE_ADMIN_CLIENT_EMAIL="your-service-account-email"
-   FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+   FIREBASE_ADMIN_PROJECT_ID=your-project-id
+   FIREBASE_ADMIN_CLIENT_EMAIL=your-service-account-email@project.iam.gserviceaccount.com
+   FIREBASE_ADMIN_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nYourPrivateKeyHere\n-----END PRIVATE KEY-----\n
    ```
+
+   **Important:**
+
+   - Do NOT use quotes around the values
+   - Get these credentials from Firebase Console → Project Settings → Service Accounts → Generate New Private Key
+   - The private key should include `\n` as literal characters (not actual newlines)
 
 ### Installation
 
