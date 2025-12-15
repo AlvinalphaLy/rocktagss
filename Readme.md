@@ -1,48 +1,95 @@
-# {{PROJECT_NAME}} — Development README
+# Meowvrick - Campus Cat Tracking Application
 
-Working draft for maintainers & contributors while the project is under active development. Coordinate in ACM Discord/Slack (project channel or #projects).
+A full-stack web application to help the UTA community locate and interact with campus cats, promoting animal welfare awareness and community engagement.
+
+**ACM Create Project | Fall 2025**
 
 Directors / Contacts: Tobi and Prajit Viswanadha — DM on Discord
 
 ---
 
+## 🐱 About The Project
+
+Meowvrick is an interactive platform that features a campus map with real-time cat location tracking, user authentication, and an administrative dashboard for managing cat profiles and user permissions. The application helps students find friendly campus cats for stress relief while promoting responsible interaction with campus wildlife.
+
 ## Status & Links
-- Phase: In Development
-- Project board: {{PROJECT_BOARD_URL}}
+
+- Phase: In Development (Not Yet Deployed)
 - Communication: Discord #rocktags
 - Open issues: use repo Issues; prefer labels `good first issue` and `help wanted` thoughtfully
 
 ---
 
+## 🚀 Tech Stack
+
+- **Frontend:** Next.js 15.5, React, TypeScript, TailwindCSS
+- **Map Integration:** Leaflet.js for interactive campus mapping
+- **Backend:** Next.js API Routes (serverless functions)
+- **Database:** Cloud Firestore with real-time synchronization
+- **Authentication:** Firebase Authentication with role-based access control
+- **Deployment:** Ready for Netlify/Vercel deployment
+
+## ✨ Key Features
+
+- 🗺️ Interactive campus map with cat locations and building markers
+- 🔐 User authentication with email verification
+- 👨‍💼 Admin dashboard with CRUD operations for cat profiles and user management
+- 🎯 Role-based access control (Admin/User permissions)
+- 📱 Responsive design for mobile and desktop
+- ⚡ Real-time database updates
+- 🔄 Dynamic table columns that auto-adapt to Firestore schema
+
 ## Getting Started
 
 ### Prerequisites
-- Git
-- One of: Node 20+ or Python 3.11+ or Go 1.22+ or Rust (stable)
-- Optional: Docker Desktop
 
-### Environment
-- Copy the sample env to your local file: `cp .env.example .env`
-- Keep secrets out of git. If you add a new variable, document it in `.env.example`.
+- Node.js 20+
+- npm or yarn
+- Firebase account with project setup
 
-### Bootstrap
-- Clone: `git clone https://github.com/{{GITHUB_OWNER}}/{{REPO}}.git` then `cd {{REPO}}`
-- Node: if `package.json` exists → `npm ci` (fallback `npm install`)
-- Python: if `requirements.txt` exists → create venv `python -m venv .venv`, activate, then `pip install -r requirements.txt`
-- Go: if `go.mod` exists → `go mod download`
-- Rust: if `Cargo.toml` exists → `cargo fetch`
+### Environment Setup
 
-### Run
-- Node: `npm run dev` (dev server) or `npm start` (if app defines it)
-- Python (FastAPI example): `uvicorn app:app --reload`
-- Go: `go run ./...`
-- Rust: `cargo run`
+1. Navigate to the project folder:
+
+   ```bash
+   cd rocktags
+   ```
+
+2. Copy the sample env file:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+3. Add your Firebase credentials to `.env.local`:
+   ```env
+   FIREBASE_ADMIN_PROJECT_ID="your-project-id"
+   FIREBASE_ADMIN_CLIENT_EMAIL="your-service-account-email"
+   FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+   ```
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/AlvinalphaLy/rocktagss.git
+cd rocktagss/rocktags
+
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+Visit `http://localhost:3000` to see the application.
 
 ---
 
 ## Repo Conventions
 
 ### Commits & Branches
+
 - Use Conventional Commits. Examples:
   - `feat(ui): add dark mode toggle`
   - `fix(api): handle null user_id on login`
@@ -51,64 +98,54 @@ Directors / Contacts: Tobi and Prajit Viswanadha — DM on Discord
 - Branch names: `feat/<slug>`, `fix/<slug>`, `chore/<slug>`, `docs/<slug>`
 
 ### Pull Requests
-- Prefer small, focused PRs; link issues using `Fixes #123`
+
+- Prefer small, focused PRs
 - Use the PR template: include testing steps, screenshots for UI changes, note breaking changes and rollback plan
 - Request reviews from maintainers or CODEOWNERS
 
-### Testing, Linting, Formatting
-- Aim for at least a smoke test; run local checks before pushing
-- Node: `npm test` (or none if not configured), `npm run lint` (if present), `npm run format` (if present)
-- Python: `pytest` (or note “No tests”), `ruff check .` (if using), `ruff format .`
-- Go: `go test ./...`
-- Rust: `cargo test`
-
 ### Secrets & Configuration
+
 - Never commit `.env` or credentials
 - Use `.env` locally; keep `.env.example` updated so others know what is required
 - For deployments, store secrets in platform settings (not in code)
 
 ---
 
-## Project Structure (suggested)
-- `src/` — application code
-- `tests/` — unit/integration tests
-- `docs/` — screenshots, diagrams, decisions (ADRs)
-- `.github/` — PR/Issue templates, CODEOWNERS (optional)
-- `.env.example` — sample env vars (copy to `.env` locally)
-- `README.dev.md` — this file (dev-only)
+## 📁 Project Structure
+
+```
+rocktags/
+├── src/
+│   ├── app/                    # Next.js app directory
+│   │   ├── admin/             # Admin dashboard
+│   │   ├── api/               # API routes (users, cats, banned)
+│   │   ├── components/        # Reusable React components
+│   │   ├── main/map/          # Interactive map page
+│   │   └── login/             # Authentication pages
+│   ├── config/                # Firebase configuration
+│   ├── lib/                   # Utility functions
+│   └── data/                  # Data fetching functions
+├── public/                     # Static assets
+├── .env.local                 # Environment variables (not committed)
+└── package.json               # Dependencies
+```
 
 ---
 
-## Decision Log (keep brief)
-Create `docs/DECISIONS.md` and record major choices with date and rationale. Example entries:
-- 2025-09-14: Choose Postgres over Mongo (SQL familiarity, joins, migrations)
-- 2025-09-14: Host on Render for MVP (simple, acceptable free tier)
+## 👥 Team & Contributors
 
----
+**ACM Create Team Project**
 
-## Release Prep Checklist (before first public release)
-- Finalize end-user README (rename/replace root README; include screenshot/GIF)
-- Choose and add a LICENSE file appropriate for the project
-- Ensure `.env.example` documents all required variables
-- Confirm basic tests pass; document manual smoke test steps
-- Tag `v0.1.0` with concise release notes
-
----
-
-## Code of Conduct (embedded)
-- Be respectful and inclusive; harassment or discrimination is not tolerated
-- Assume good intent; give clear, constructive feedback
-- Report concerns privately to a director (contacts above)
-
----
-
-## Security / Responsible Disclosure (embedded)
-- Do not open public issues for vulnerabilities
-- Privately contact Tobi or Prajit Viswanadha (ACM Discord/Slack DM) with details and reproduction steps
-- We will acknowledge receipt and coordinate a fix
-
----
-
-## Maintainers & Support
-- Maintainers: {{PRIMARY_OWNER}} ([@{{GITHUB_HANDLE}}](https://github.com/{{GITHUB_HANDLE}})), {{CO_MAINTAINER}}
 - Directors / Contacts: Tobi and Prajit Viswanadha — DM on Discord
+
+## 📄 License
+
+This project is part of ACM Create at UTA.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow the conventional commit format and submit PRs for review.
+
+## 📧 Contact
+
+For questions or support, reach out via Discord #rocktags channel.
